@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Choose Your Agreement{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <div class="progress-dots">
+        <span class="dot"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+    
+    <div class="content-section">
+        <h2 class="section-title">What kind of understanding are you here to put into words?</h2>
+        
+        <form method="post" id="typeForm">
+            {% csrf_token %}
+            <div class="type-cards">
+                {% for type in types %}
+                <label class="type-card">
+                    <input type="radio" name="agreement_type" value="{{ type.id }}" required>
+                    <div class="card-content">
+                        <div class="card-icon">{{ type.icon }}</div>
+                        <h3 class="card-title">{{ type.name }}</h3>
+                        <p class="card-description">{{ type.description }}</p>
+                    </div>
+                    <div class="card-glow"></div>
+                </label>
+                {% endfor %}
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="primary-button" disabled id="continueBtn">
+                    Continue
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('input[name="agreement_type"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        document.getElementById('continueBtn').disabled = false;
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Exhibition Archive{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <div class="content-section">
+        <div class="archive-header">
+            <h1 class="section-title">The Archive of Human Promises</h1>
+            <p class="section-subtitle">{{ total_count }} agreements made</p>
+        </div>
+        
+        <div class="archive-grid">
+            {% for agreement in agreements %}
+            <div class="archive-card">
+                <div class="archive-card-header">
+                    <span class="agreement-type-badge">{{ agreement.agreement_type.name }}</span>
+                    <span class="agreement-date">{{ agreement.created_at|date:"M d, Y" }}</span>
+                </div>
+                
+                <div class="archive-card-content">
+                    <h3 class="archive-participants">{{ agreement.participants }}</h3>
+                    
+                    {% if agreement.photo %}
+                    <div class="archive-photo">
+                        <img src="{{ agreement.photo.image.url }}" alt="Signing moment">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="archive-preview">
+                        {{ agreement.get_final_text|truncatewords:30 }}
+                    </div>
+                </div>
+                
+                <div class="archive-card-footer">
+                    <span class="timestamp">{{ agreement.completed_at|date:"h:i A" }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <p>No agreements yet. The archive awaits its first promise.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

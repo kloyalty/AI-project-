@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Reflection{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <div class="progress-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+    
+    <div class="content-section">
+        <div class="chat-header">
+            <h2 class="section-title">{{ agreement_type }}</h2>
+            <p class="section-subtitle">Take your time. Each answer helps shape your agreement.</p>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="message assistant fade-in">
+                <div class="message-content">
+                    Let's begin. Who is this agreement between?
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-wrapper">
+            <form id="chatForm">
+                <div class="input-group">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Type your response..."
+                        rows="3"
+                        required
+                    ></textarea>
+                    <button type="submit" class="send-button" id="sendBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- THIS IS THE BUTTON TO UPDATE -->
+            <div class="chat-actions">
+                <button type="button" class="secondary-button" id="generateBtn" style="display: none; margin-top: 1rem;">
+                    <span>✓</span> I'm Ready - Generate Agreement
+                </button>
+                <p id="generateHint" style="display: none; text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                    Feel free to continue, or generate your agreement when ready
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const chatContainer = document.getElementById('chatContainer');
+const chatForm = document.getElementById('chatForm');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const generateBtn = document.getElementById('generateBtn');
+let messageCount = 0;
+
+chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const message = messageInput.value.trim();
+    if (!message) return;
+    
+    // Add user message
+    addMessage(message, 'user');
+    messageInput.value = '';
+    sendBtn.disabled = true;
+    
+    // Send to API
+    try {
+        const response = await fetch('{% url "chat_api" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message })
+        });
+        
+        const data = await response.json();
+        messageCount = data.message_count;
+        
+        // Add AI response
+        setTimeout(() => {
+            addMessage(data.response, 'assistant');
+            sendBtn.disabled = false;
+            
+            // Show generate button after 4+ messages (UPDATED)
+            if (messageCount >= 4) {
+                generateBtn.style.display = 'block';
+                document.getElementById('generateHint').style.display = 'block';
+            }
+        }, 800);
+    } catch (error) {
+        console.error('Error:', error);
+        addMessage('I apologize, but something went wrong. Please try again.', 'assistant');
+        sendBtn.disabled = false;
+    }
+});
+
+generateBtn.addEventListener('click', () => {
+    window.location.href = '{% url "generate_agreement" %}';
+});
+
+function addMessage(text, role) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${role} fade-in`;
+    messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
+    chatContainer.appendChild(messageDiv);
+    messageDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+</script>
+{% endblock %}

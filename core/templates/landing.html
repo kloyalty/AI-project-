@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Agreement Studio - Begin{% endblock %}
+
+{% block content %}
+<div class="landing-container fade-in">
+    <div class="landing-content">
+        <div class="landing-message">
+            <h1 class="landing-title">Every world is built on agreements.</h1>
+            <p class="landing-subtitle">Let's write one that matters.</p>
+        </div>
+        
+        <a href="{% url 'select_type' %}" class="primary-button glow-hover">
+            Begin
+        </a>
+        
+        <div class="landing-ornament"></div>
+    </div>
+</div>
+{% endblock %}

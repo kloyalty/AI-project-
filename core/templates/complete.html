@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Complete{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <div class="content-section complete-section">
+        <div class="complete-icon">
+            <div class="envelope-animation">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+            </div>
+        </div>
+        
+        <h1 class="complete-title">Your Agreement is Complete</h1>
+        
+        <div class="complete-message">
+            <p>Fold your signed paper.</p>
+            <p>Place it inside the envelope.</p>
+            <p>Seal it.</p>
+            <p>Write <span class="highlight">{{ participants }}</span> on the front.</p>
+        </div>
+        
+        <div class="complete-quote">
+            <p class="quote-text">"You came to write an agreement.</p>
+            <p class="quote-text">You left having made one—</p>
+            <p class="quote-text">with yourself, another, or the world."</p>
+        </div>
+        
+        <a href="{% url 'landing' %}" class="secondary-button">
+            Return to Beginning
+        </a>
+    </div>
+</div>
+
+<style>
+.envelope-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+</style>
+{% endblock %}

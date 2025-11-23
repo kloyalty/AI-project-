@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Your Agreement{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <div class="progress-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+    </div>
+    
+    <div class="content-section">
+        <div class="review-header">
+            <h2 class="section-title">Your Agreement</h2>
+            <p class="section-subtitle glow-text">These words will hold meaning. Read slowly. Make sure they are yours.</p>
+        </div>
+        
+        <form method="post" id="reviewForm">
+            {% csrf_token %}
+            <div class="agreement-editor">
+                <textarea 
+                    name="agreement_text" 
+                    id="agreementText"
+                    class="agreement-textarea"
+                >{{ agreement_text }}</textarea>
+            </div>
+            
+            <div class="button-group">
+                <a href="{% url 'reflection' %}" class="secondary-button">
+                    Back to Reflection
+                </a>
+                <button type="submit" class="primary-button">
+                    This is Ready
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Auto-resize textarea
+const textarea = document.getElementById('agreementText');
+textarea.style.height = 'auto';
+textarea.style.height = textarea.scrollHeight + 'px';
+
+textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+});
+</script>
+{% endblock %}
